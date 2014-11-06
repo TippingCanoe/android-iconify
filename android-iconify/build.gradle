@@ -1,0 +1,37 @@
+apply plugin: 'com.android.library'
+
+repositories {
+	mavenCentral()
+}
+
+version = '1.0.9'
+group = 'com.joanzapata.android.iconify'
+
+android {
+	compileSdkVersion 21
+	buildToolsVersion '21.1.0'
+
+	defaultConfig {
+		minSdkVersion 8
+	}
+
+	lintOptions {
+		abortOnError false
+	}
+}
+
+apply plugin: 'maven'
+
+uploadArchives {
+	repositories {
+		mavenDeployer {
+			pom.project {
+				name project.getName()
+			}
+			repository url: 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath
+			repository(url: 'http://archiva.tippingcanoe.com/repository/' + (version.endsWith('-SNAPSHOT') ? 'snapshots' : 'internal') + '/') {
+				authentication(userName: mavenUser, password: mavenPassword)
+			}
+		}
+	}
+}
