@@ -120,7 +120,7 @@ public class IconDrawable extends Drawable {
 		return paddingPx(context.getResources().getDimensionPixelSize(paddingRes));
 	}
 
-	public IconDrawable paddingDb(int padding) {
+	public IconDrawable paddingDp(int padding) {
 		return paddingPx(convertDpToPx(context, padding));
 	}
 
