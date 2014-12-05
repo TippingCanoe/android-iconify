@@ -58,12 +58,16 @@ public class IconDrawable extends Drawable {
 
     private int alpha = 255;
 
+	private int padding;
+
     /**
      * Create an IconDrawable.
      * @param context Your activity or application context.
      * @param icon    The icon you want this drawable to display.
      */
     public IconDrawable(Context context, Iconify.IconValue icon) {
+	    this.padding = 0;
+
         this.context = context;
         this.icon = icon;
         paint = new TextPaint();
@@ -108,10 +112,28 @@ public class IconDrawable extends Drawable {
      */
     public IconDrawable sizePx(int size) {
         this.size = size;
-        setBounds(0, 0, size, size);
-        invalidateSelf();
+        updateBounds();
         return this;
     }
+
+	public IconDrawable paddingRes(int paddingRes) {
+		return paddingPx(context.getResources().getDimensionPixelSize(paddingRes));
+	}
+
+	public IconDrawable paddingDb(int padding) {
+		return paddingPx(convertDpToPx(context, padding));
+	}
+
+	public IconDrawable paddingPx(int padding) {
+		this.padding = padding;
+		updateBounds();
+		return this;
+	}
+
+	protected void updateBounds() {
+		setBounds(0, 0, size + padding, size + padding);
+		invalidateSelf();
+	}
 
     /**
      * Set the color of the drawable.
