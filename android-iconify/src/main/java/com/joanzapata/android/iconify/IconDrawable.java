@@ -58,12 +58,22 @@ public class IconDrawable extends Drawable {
 
     private int alpha = 255;
 
+	private int paddingLeft;
+	private int paddingRight;
+	private int paddingTop;
+	private int paddingBottom;
+
     /**
      * Create an IconDrawable.
      * @param context Your activity or application context.
      * @param icon    The icon you want this drawable to display.
      */
     public IconDrawable(Context context, Iconify.IconValue icon) {
+	    this.paddingLeft = 0;
+	    this.paddingRight = 0;
+	    this.paddingTop = 0;
+	    this.paddingBottom = 0;
+
         this.context = context;
         this.icon = icon;
         paint = new TextPaint();
@@ -108,10 +118,31 @@ public class IconDrawable extends Drawable {
      */
     public IconDrawable sizePx(int size) {
         this.size = size;
-        setBounds(0, 0, size, size);
-        invalidateSelf();
+        updateBounds();
         return this;
     }
+
+	public IconDrawable paddingRes(int paddingTop, int paddingRight, int paddingBottom, int paddingLeft) {
+		return paddingPx(context.getResources().getDimensionPixelSize(paddingTop), context.getResources().getDimensionPixelSize(paddingRight), context.getResources().getDimensionPixelSize(paddingBottom), context.getResources().getDimensionPixelSize(paddingLeft));
+	}
+
+	public IconDrawable paddingDp(int paddingTop, int paddingRight, int paddingBottom, int paddingLeft) {
+		return paddingPx(convertDpToPx(context, paddingTop), convertDpToPx(context, paddingRight), convertDpToPx(context, paddingBottom), convertDpToPx(context, paddingLeft));
+	}
+
+	public IconDrawable paddingPx(int paddingTop, int paddingRight, int paddingBottom, int paddingLeft) {
+		this.paddingLeft = paddingLeft;
+		this.paddingRight = paddingRight;
+		this.paddingTop = paddingTop;
+		this.paddingBottom = paddingBottom;
+		updateBounds();
+		return this;
+	}
+
+	protected void updateBounds() {
+		setBounds(0, 0, size + paddingLeft + paddingRight, size + paddingTop + paddingBottom);
+		invalidateSelf();
+	}
 
     /**
      * Set the color of the drawable.
@@ -158,12 +189,12 @@ public class IconDrawable extends Drawable {
 
     @Override
     public void draw(Canvas canvas) {
-        paint.setTextSize(getBounds().height());
+        paint.setTextSize(size == -1 ? getBounds().height() : size);
         Rect textBounds = new Rect();
         String textValue = valueOf(icon.character);
         paint.getTextBounds(textValue, 0, 1, textBounds);
-        float textBottom = (getBounds().height() - textBounds.height()) / 2f + textBounds.height() - textBounds.bottom;
-        canvas.drawText(textValue, getBounds().width() / 2f, textBottom, paint);
+        float textBottom = ((getBounds().height() - (paddingTop + paddingBottom)) - textBounds.height()) / 2f + textBounds.height() - textBounds.bottom;
+        canvas.drawText(textValue, ((getBounds().width() - (paddingLeft + paddingRight)) / 2f) + paddingLeft, paddingTop + textBottom, paint);
     }
 
     @Override
