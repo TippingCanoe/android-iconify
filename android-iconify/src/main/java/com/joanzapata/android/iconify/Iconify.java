@@ -80,7 +80,10 @@ public final class Iconify {
 
     public static enum IconValue {
 
-	    icon_meta_comment('1'),     // 0x31     '1'
+        icon_camera('%'),           // 0x25     '%'
+        icon_info('$'),             // 0x24     '$'
+        icon_deal('#'),             // 0x23     '#'
+        icon_meta_comment('1'),     // 0x31     '1'
 	    icon_report('t'),           // 0x74     't'
 	    icon_quote('i'),            // 0x69     'i'
 	    icon_expire(';'),           // 0x3b     ';'
