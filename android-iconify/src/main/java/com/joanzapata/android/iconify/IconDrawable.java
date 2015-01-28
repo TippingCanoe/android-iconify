@@ -190,6 +190,7 @@ public class IconDrawable extends Drawable {
     @Override
     public void draw(Canvas canvas) {
         paint.setTextSize(size == -1 ? getBounds().height() : size);
+	    paint.setStyle(Paint.Style.FILL);
         Rect textBounds = new Rect();
         String textValue = valueOf(icon.character);
         paint.getTextBounds(textValue, 0, 1, textBounds);
