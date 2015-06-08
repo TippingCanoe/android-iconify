@@ -4,12 +4,12 @@ repositories {
 	mavenCentral()
 }
 
-version = '1.0.20'
+version = '1.0.21'
 group = 'com.joanzapata.android.iconify'
 
 android {
 	compileSdkVersion 21
-	buildToolsVersion '21.1.0'
+	buildToolsVersion '21.1.2'
 
 	defaultConfig {
 		minSdkVersion 8
