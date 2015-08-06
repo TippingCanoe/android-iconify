@@ -35,9 +35,20 @@ public final class Iconify {
     public static final String TAG = Iconify.class.getSimpleName();
     private static final String HUKD_TTF = "hukd.ttf";
     private static final String PEPPER_TTF = "pepper.ttf";
+    private static Typeface typeface = null;
 
     private Iconify() {
         // Prevent instantiation
+    }
+
+    /**
+     * Initializes the typeface (font) to be used with Iconify.
+     *
+     * @param context
+     * @param iconFont
+     */
+    public static void initializeTypeface(Context context, IconFont iconFont) {
+        typeface = Typeface.createFromAsset(context.getAssets(), iconFont.getFontPath());
     }
 
     /**
@@ -68,7 +79,10 @@ public final class Iconify {
      * Gets the default typeface (HUKD icon font).
      */
     public static Typeface getTypeface(Context context) {
-        return IconFont.HUKD.getTypeface(context);
+        if (typeface == null) {
+            throw new RuntimeException("Iconify Typeface has not yet been initialized. Make sure you call Iconify.initializeTypeface(Context, IconFont) in your Application class.");
+        }
+        return typeface;
     }
 
     public enum IconFont {
@@ -84,10 +98,6 @@ public final class Iconify {
 
         public String getFontPath() {
             return FONT_PATH;
-        }
-
-        public Typeface getTypeface(Context context) {
-            return Typeface.createFromAsset(context.getAssets(), FONT_PATH);
         }
     }
 
@@ -137,8 +147,7 @@ public final class Iconify {
         icon_login_twitter('9'),    // 0x39     '9'
         icon_login_facebook('0'),   // 0x30     '0'
         icon_login_email('-'),      // 0x2d     '-'
-        icon_format_under(','),     // 0x2c     ','     // HUKD only
-        icon_format_strike(','),     // 0x2c     ','    // Pepper only (Note: same char as HUKD's underline icon)
+        icon_format_under(','),     // 0x2c     ','     This is a strike-thru icon in the Pepper font
         icon_format_italic('.'),    // 0x2e     '.'
         icon_format_bold('/'),      // 0x2e     '/'
         icon_delete('['),           // 0x5b     '['
