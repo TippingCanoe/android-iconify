@@ -1,22 +1,22 @@
 /**
  * Copyright 2013 Joan Zapata
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
+ * <p/>
  * It uses FontAwesome font, licensed under OFL 1.1, which is compatible
  * with this library's license.
- *
- *     http://scripts.sil.org/cms/scripts/render_download.php?format=file&media_id=OFL_plaintext&filename=OFL.txt
+ * <p/>
+ * http://scripts.sil.org/cms/scripts/render_download.php?format=file&media_id=OFL_plaintext&filename=OFL.txt
  */
 package com.joanzapata.android.iconify;
 
@@ -32,11 +32,9 @@ import static java.lang.String.valueOf;
 
 public final class Iconify {
 
-    private static final String TTF_FILE = "hukd.ttf";
-
     public static final String TAG = Iconify.class.getSimpleName();
-
-    private static Typeface typeface = null;
+    private static final String HUKD_TTF = "hukd.ttf";
+    private static final String PEPPER_TTF = "pepper.ttf";
 
     private Iconify() {
         // Prevent instantiation
@@ -45,7 +43,7 @@ public final class Iconify {
     /**
      * Transform the given TextViews replacing {icon_xxx} texts with icons.
      */
-    public static final void addIcons(TextView... textViews) {
+    public static void addIcons(TextView... textViews) {
         for (TextView textView : textViews) {
             textView.setTypeface(getTypeface(textView.getContext()));
             textView.setText(compute(textView.getText()));
@@ -61,24 +59,39 @@ public final class Iconify {
         return replaceIcons(new StringBuilder(text));
     }
 
-    public static final void setIcon(TextView textView, IconValue value) {
+    public static void setIcon(TextView textView, IconValue value) {
         textView.setTypeface(getTypeface(textView.getContext()));
         textView.setText(valueOf(value.character));
     }
 
     /**
-     * The typeface that contains FontAwesome icons.
-     *
-     * @return the typeface, or null if something goes wrong.
+     * Gets the default typeface (HUKD icon font).
      */
-    public static final Typeface getTypeface(Context context) {
-        if (typeface == null) {
-            typeface = Typeface.createFromAsset(context.getAssets(), TTF_FILE);
-        }
-        return typeface;
+    public static Typeface getTypeface(Context context) {
+        return IconFont.HUKD.getTypeface(context);
     }
 
-    public static enum IconValue {
+    public enum IconFont {
+
+        HUKD(HUKD_TTF),
+        PEPPER(PEPPER_TTF);
+
+        final String FONT_PATH;
+
+        IconFont(String fontPath) {
+            this.FONT_PATH = fontPath;
+        }
+
+        public String getFontPath() {
+            return FONT_PATH;
+        }
+
+        public Typeface getTypeface(Context context) {
+            return Typeface.createFromAsset(context.getAssets(), FONT_PATH);
+        }
+    }
+
+    public enum IconValue {
 
         icon_meta_comment('1'),     // 0x31     '1'
         icon_report('t'),           // 0x74     't'
@@ -124,7 +137,8 @@ public final class Iconify {
         icon_login_twitter('9'),    // 0x39     '9'
         icon_login_facebook('0'),   // 0x30     '0'
         icon_login_email('-'),      // 0x2d     '-'
-        icon_format_under(','),     // 0x2c     ','
+        icon_format_under(','),     // 0x2c     ','     // HUKD only
+        icon_format_strike(','),     // 0x2c     ','    // Pepper only (Note: same char as HUKD's underline icon)
         icon_format_italic('.'),    // 0x2e     '.'
         icon_format_bold('/'),      // 0x2e     '/'
         icon_delete('['),           // 0x5b     '['
